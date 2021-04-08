@@ -32,10 +32,7 @@ Pilha::~Pilha()
 
 bool Pilha::vazia() const
 {
-	if (tam == 0)
-		return true;
-
-	return false;
+	return (tam == 0);
 }
 
 void Pilha::push(int n)

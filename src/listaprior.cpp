@@ -81,10 +81,7 @@ ListaPrior& ListaPrior::operator=(const ListaPrior& l)
 
 bool ListaPrior::vazia() const
 {
-	if (tam == 0)
-		return true;
-
-	return false;
+	return (tam == 0);
 }
 
 void ListaPrior::imprime() const

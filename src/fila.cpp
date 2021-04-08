@@ -33,10 +33,7 @@ Fila::~Fila()
 
 bool Fila::vazia() const
 {
-	if (tam == 0)
-		return true;
-
-	return false;
+	return (tam == 0);
 }
 
 void Fila::insere(int i)
