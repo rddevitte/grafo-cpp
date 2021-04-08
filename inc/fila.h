@@ -6,7 +6,7 @@ class NodoFila
 public:
 	int n;
 	NodoFila *ant;
-	NodoFila(int n);
+	explicit NodoFila(int _n);
 	~NodoFila();
 };
 

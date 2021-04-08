@@ -3,9 +3,8 @@
 
 using namespace std;
 
-NodoFila::NodoFila(int n)
+NodoFila::NodoFila(int _n) : n(_n)
 {
-	this->n = n;
 	ant = NULL;
 }
 
