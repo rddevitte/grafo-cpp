@@ -41,7 +41,7 @@ Grafo::~Grafo()
  * Retorna o número de vértices do grafo.
  * @return Número de vértices do grafo
  */
-int Grafo::numVerts()
+int Grafo::numVerts() const
 {
 	return n;
 }
@@ -81,7 +81,7 @@ void Grafo::insAdj(int v, int a, int dist, bool bidir)
 /**
  * Imprime os vértices do grafo, seus adjacentes e suas distâncias.
  */
-void Grafo::imprime()
+void Grafo::imprime() const
 {
 	Lista *aux;
 	int v;

@@ -17,8 +17,8 @@ private:
 	NodoPilha *topo;
 public:
 	Pilha();
-	int  tamanho();
-	bool vazia();
+	int  tamanho() const;
+	bool vazia() const;
 	void push(int n);
 	int  pop();
 	~Pilha();

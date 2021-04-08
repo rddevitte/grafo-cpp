@@ -17,7 +17,7 @@ private:
 	NodoFila *frente, *atras;
 public:
 	Fila();
-	bool vazia();
+	bool vazia() const;
 	void insere(int i);
 	int  retira();
 	~Fila();

@@ -18,9 +18,9 @@ private:
 	Vertice *vs;
 public:
 	Grafo(int i, int n);
-	int  numVerts();
+	int  numVerts() const;
 	void insAdj(int v, int a, int dist, bool bidir);
-	void imprime();
+	void imprime() const;
 	void buscaProfundidade(int v);
 	void buscaLargura(int v);
 	int *componentes();

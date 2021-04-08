@@ -21,8 +21,8 @@ private:
 	int tam; // tamanho da lista
 public:
 	ListaPrior(int i, int tam);
-	bool vazia();
-	void imprime();
+	bool vazia() const;
+	void imprime() const;
 	int  extraiMin();
 	void decresceChave(int v, int dist);
 	~ListaPrior();

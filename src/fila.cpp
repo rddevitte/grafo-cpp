@@ -34,7 +34,7 @@ Fila::~Fila()
 	atras = NULL;
 }
 
-bool Fila::vazia()
+bool Fila::vazia() const
 {
 	if (tam == 0)
 		return true;

@@ -32,12 +32,12 @@ Pilha::~Pilha()
 	}
 }
 
-int Pilha::tamanho()
+int Pilha::tamanho() const
 {
 	return tam;
 }
 
-bool Pilha::vazia()
+bool Pilha::vazia() const
 {
 	if (tam == 0)
 		return true;

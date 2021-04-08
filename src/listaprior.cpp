@@ -43,7 +43,7 @@ ListaPrior::ListaPrior(int i, int tam)
 	}
 }
 
-bool ListaPrior::vazia()
+bool ListaPrior::vazia() const
 {
 	if (tam == 0)
 		return true;
@@ -51,7 +51,7 @@ bool ListaPrior::vazia()
 	return false;
 }
 
-void ListaPrior::imprime()
+void ListaPrior::imprime() const
 {
 	NodoListaPrior *aux;
 
