@@ -16,9 +16,6 @@ NodoListaPrior::~NodoListaPrior()
 
 ListaPrior::ListaPrior(int i, int tam)
 {
-	NodoListaPrior *aux;
-	int n;
-
 	if (i < 0 || i > 1)
 	{
 		cerr << "[" << __func__
@@ -34,9 +31,9 @@ ListaPrior::ListaPrior(int i, int tam)
 
 	min = new NodoListaPrior(i, INF);
 
-	aux = min;
+	NodoListaPrior *aux = min;
 
-	for (n = i + 1; n < tam + i; n++)
+	for (int n = i + 1; n < tam + i; n++)
 	{
 		aux->prox = new NodoListaPrior(n, INF);
 		aux = aux->prox;
@@ -185,11 +182,9 @@ void ListaPrior::decresceChave(int v, int dist)
 
 ListaPrior::~ListaPrior()
 {
-	NodoListaPrior *aux;
-
 	while (min != NULL)
 	{
-		aux = min;
+		NodoListaPrior *aux = min;
 		min = min->prox;
 		delete aux;
 		tam--;

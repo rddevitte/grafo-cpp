@@ -279,7 +279,7 @@ void Grafo::caminhoMinimo(int v, int **dist, int **prev)
 {
 	ListaPrior lp(i, n);
 	Lista *aux;
-	int k, p, q, peso;
+	int k, q, peso;
 
 	if (v < i || v > (n - 1) + i)
 	{
@@ -305,7 +305,7 @@ void Grafo::caminhoMinimo(int v, int **dist, int **prev)
 
 	while (!lp.vazia())
 	{
-		p = lp.extraiMin();
+		int p = lp.extraiMin();
 
 		aux = vs[p].adj;
 

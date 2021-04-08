@@ -20,11 +20,9 @@ Fila::Fila()
 
 Fila::~Fila()
 {
-	NodoFila *aux;
-
 	while (tam > 0)
 	{
-		aux = frente;
+		NodoFila *aux = frente;
 		frente = frente->ant;
 		delete aux;
 		tam--;

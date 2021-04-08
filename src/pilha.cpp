@@ -21,11 +21,9 @@ Pilha::Pilha()
 
 Pilha::~Pilha()
 {
-	NodoPilha *aux;
-
 	while (tam > 0)
 	{
-		aux = topo;
+		NodoPilha *aux = topo;
 		topo = topo->abaixo;
 		delete aux;
 		tam--;
