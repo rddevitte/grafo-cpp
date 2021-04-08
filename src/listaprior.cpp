@@ -40,6 +40,45 @@ ListaPrior::ListaPrior(int i, int tam)
 	}
 }
 
+ListaPrior::ListaPrior(const ListaPrior& l)
+{
+	this->i = l.i;
+	this->tam = l.tam;
+
+	min = new NodoListaPrior(i, INF);
+
+	NodoListaPrior *aux = min;
+
+	for (int n = i + 1; n < tam + i; n++)
+	{
+		aux->prox = new NodoListaPrior(n, INF);
+		aux = aux->prox;
+	}
+}
+
+ListaPrior& ListaPrior::operator=(const ListaPrior& l)
+{
+	if (&l != this)
+	{
+		delete min;
+
+		this->i = l.i;
+		this->tam = l.tam;
+
+		min = new NodoListaPrior(i, INF);
+
+		NodoListaPrior *aux = min;
+
+		for (int n = i + 1; n < tam + i; n++)
+		{
+			aux->prox = new NodoListaPrior(n, INF);
+			aux = aux->prox;
+		}
+	}
+
+	return *this;
+}
+
 bool ListaPrior::vazia() const
 {
 	if (tam == 0)

@@ -18,6 +18,8 @@ private:
 	Vertice *vs;
 public:
 	Grafo(int i, int n);
+	Grafo(const Grafo&);
+	Grafo& operator=(const Grafo&);
 	int  numVerts() const;
 	void insAdj(int v, int a, int dist, bool bidir);
 	void imprime() const;

@@ -21,6 +21,8 @@ private:
 	int tam; // tamanho da lista
 public:
 	ListaPrior(int i, int tam);
+	ListaPrior(const ListaPrior&);
+	ListaPrior& operator=(const ListaPrior&);
 	bool vazia() const;
 	void imprime() const;
 	int  extraiMin();

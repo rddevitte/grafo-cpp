@@ -30,6 +30,44 @@ Grafo::Grafo(int i, int n)
 }
 
 /**
+ * Copy constructor.
+ * @param g O grafo a ser "copiado"
+ */
+Grafo::Grafo(const Grafo& g)
+{
+	this->i = g.i;
+	this->n = g.n;
+
+	vs = new Vertice[n + 1];
+
+	for (int x = 0; x < n; x++)
+		this->vs[x] = g.vs[x];
+}
+
+/**
+ * "Sobrecarrega" o operador de igualdade (=).
+ * @param g O grafo cujos atributos são copiados para outro grafo
+ */
+Grafo& Grafo::operator=(const Grafo& g)
+{
+	if (&g != this)
+	{
+		delete[] vs;
+
+		this->i = g.i;
+		this->n = g.n;
+
+		vs = new Vertice[n + 1];
+
+		for (int x = 0; x < n; x++)
+			this->vs[x] = g.vs[x];
+	}
+
+	return *this;
+}
+
+
+/**
  * Destrutor do grafo.
  */
 Grafo::~Grafo()
