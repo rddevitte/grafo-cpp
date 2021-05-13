@@ -12,4 +12,4 @@ Basically, the code implements the undirected graph of the pic below, do the vis
 
 ## Run
 
-`./grafos-cpp`
+`./grafo-cpp`

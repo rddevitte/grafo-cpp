@@ -12,4 +12,4 @@ Basicamente, ele implementa o grafo não direcionado da figura abaixo, realiza a
 
 ## Executar
 
-`./grafos-cpp`
+`./grafo-cpp`
