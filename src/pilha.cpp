@@ -1,12 +1,10 @@
-#include <iostream>
 #include "../inc/pilha.h"
+#include <iostream>
 
-using namespace std;
-
-NodoPilha::NodoPilha(int n, NodoPilha *abaixo)
+NodoPilha::NodoPilha(int n, NodoPilha* abaixo)
+    : n_(n)
+    , abaixo_(abaixo)
 {
-	this->n = n;
-	this->abaixo = abaixo;
 }
 
 NodoPilha::~NodoPilha()
@@ -14,56 +12,54 @@ NodoPilha::~NodoPilha()
 }
 
 Pilha::Pilha()
+    : tam_(0)
+    , topo_(nullptr)
 {
-	tam = 0;
-	topo = NULL;
 }
 
 Pilha::~Pilha()
 {
-	while (tam > 0)
-	{
-		NodoPilha *aux = topo;
-		topo = topo->abaixo;
-		delete aux;
-		tam--;
-	}
+    while (tam_ > 0) {
+        NodoPilha* aux = topo_;
+        topo_ = topo_->abaixo_;
+        delete aux;
+        tam_--;
+    }
 }
 
 bool Pilha::vazia() const
 {
-	return (tam == 0);
+    return (tam_ == 0);
 }
 
 void Pilha::push(int n)
 {
-	NodoPilha *novo;
+    NodoPilha* novo;
 
-	novo = new NodoPilha(n, topo);
-	topo = novo;
-	tam++;
+    novo = new NodoPilha(n, topo_);
+    topo_ = novo;
+    tam_++;
 
-	return;
+    return;
 }
 
 int Pilha::pop()
 {
-	NodoPilha *aux;
-	int n;
+    NodoPilha* aux;
+    int n;
 
-	if (tam == 0)
-	{
-		cerr << "[" << __func__ << "()] Erro: pilha vazia\n";
-		return -1;
-	}
+    if (tam_ == 0) {
+        std::cerr << "[" << __func__ << "()] Erro: pilha vazia\n";
+        return -1;
+    }
 
-	n = topo->n;
+    n = topo_->n_;
 
-	aux = topo;
-	topo = topo->abaixo;
-	delete aux;
+    aux = topo_;
+    topo_ = topo_->abaixo_;
+    delete aux;
 
-	tam--;
+    tam_--;
 
-	return n;
+    return n;
 }

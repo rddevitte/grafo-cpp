@@ -3,13 +3,12 @@
 
 #include "lista.h"
 
-class Vertice
-{
+class Vertice {
 public:
-	Lista *adj;
-	Vertice();
-	void insAdj(int a, int dist);
-	~Vertice();
+    Lista* adj_;
+    Vertice();
+    void insAdj(int a, int dist);
+    ~Vertice();
 };
 
 #endif /* VERTICE_H */

@@ -1,11 +1,11 @@
-#include <iostream>
 #include "../inc/lista.h"
+#include <iostream>
 
 Lista::Lista(int v, int dist)
+    : v_(v)
+    , dist_(dist)
+    , prox_(nullptr)
 {
-	this->v = v;
-	this->dist = dist;
-	prox = NULL;
 }
 
 Lista::~Lista()

@@ -1,26 +1,25 @@
 #ifndef FILA_H
 #define FILA_H
 
-class NodoFila
-{
+class NodoFila {
 public:
-	int n;
-	NodoFila *ant;
-	explicit NodoFila(int _n);
-	~NodoFila();
+    int n_;
+    NodoFila* ant_;
+    explicit NodoFila(int n);
+    ~NodoFila();
 };
 
-class Fila
-{
+class Fila {
 private:
-	int tam;
-	NodoFila *frente, *atras;
+    int tam_;
+    NodoFila *frente_, *atras_;
+
 public:
-	Fila();
-	bool vazia() const;
-	void insere(int i);
-	int  retira();
-	~Fila();
+    Fila();
+    bool vazia() const;
+    void insere(int i);
+    int retira();
+    ~Fila();
 };
 
 #endif /* FILA_H */

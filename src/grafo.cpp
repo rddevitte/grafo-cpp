@@ -1,367 +1,285 @@
-#include <iostream>
-#include "../inc/fila.h"
 #include "../inc/grafo.h"
+#include "../inc/fila.h"
 #include "../inc/lista.h"
 #include "../inc/listaprior.h"
 #include "../inc/pilha.h"
+#include <iostream>
 
-using namespace std;
-
-/**
- * Construtor do grafo.
- * @param i Vértice inicial (deve ser 0 ou 1).
- * Se i = 0, os vértices são numerados de 0 a n - 1.
- * Se i = 1, os vértices são numerados de 1 a n.
- * @param n Número de vértices
- */
 Grafo::Grafo(int i, int n)
+    : n_(n)
 {
-	if (i < 0 || i > 1)
-	{
-		cerr << "i deve ser 0 ou 1, assumindo 0\n";
-		this->i = 0;
-	}
-	else
-		this->i = i;
+    if (i < 0 || i > 1) {
+        std::cerr << "i deve ser 0 ou 1, assumindo 0\n";
+        i_ = 0;
+    } else
+        i_ = i;
 
-	this->n = n;
-
-	vs = new Vertice[n + 1];
+    vs_ = new Vertice[n_ + 1];
 }
 
-/**
- * Copy constructor.
- * @param g O grafo a ser "copiado"
- */
 Grafo::Grafo(const Grafo& g)
 {
-	this->i = g.i;
-	this->n = g.n;
+    i_ = g.i_;
+    n_ = g.n_;
 
-	vs = new Vertice[n + 1];
+    vs_ = new Vertice[n_ + 1];
 
-	for (int x = 0; x < n; x++)
-		this->vs[x] = g.vs[x];
+    for (int x = 0; x < n_; x++)
+        this->vs_[x] = g.vs_[x];
 }
 
-/**
- * "Sobrecarrega" o operador de igualdade (=).
- * @param g O grafo cujos atributos são copiados para outro grafo
- */
 Grafo& Grafo::operator=(const Grafo& g)
 {
-	if (&g != this)
-	{
-		delete[] vs;
+    if (&g != this) {
+        delete[] vs_;
 
-		this->i = g.i;
-		this->n = g.n;
+        i_ = g.i_;
+        n_ = g.n_;
 
-		vs = new Vertice[n + 1];
+        vs_ = new Vertice[n_ + 1];
 
-		for (int x = 0; x < n; x++)
-			this->vs[x] = g.vs[x];
-	}
+        for (int x = 0; x < n_; x++)
+            vs_[x] = g.vs_[x];
+    }
 
-	return *this;
+    return *this;
 }
 
-
-/**
- * Destrutor do grafo.
- */
 Grafo::~Grafo()
 {
-	delete[] vs;
+    delete[] vs_;
 }
 
-/**
- * Retorna o número de vértices do grafo.
- * @return Número de vértices do grafo
- */
 int Grafo::numVerts() const
 {
-	return n;
+    return n_;
 }
 
-/**
- * Insere um vértice adjacente 'a' a um vértice 'v' da lista
- * com distância 'dist'.
- * @param v O vértice
- * @param a O vértice adjacente
- * @param dist Distância entre 'v' e 'a'
- * @param bidir Indica se o vértice é bidirecional
- */
 void Grafo::insAdj(int v, int a, int dist, bool bidir)
 {
-	if (v < 0 || v > n)
-	{
-		cerr << "[" << __func__
-			 << "()] Erro: vértice " << v << " inválido\n";
-		return;
-	}
+    if (v < 0 || v > n_) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: vértice " << v << " inválido\n";
+        return;
+    }
 
-	if (a < 0 || a > n)
-	{
-		cerr << "[" << __func__
-			 << "()] Erro: vértice adjacente " << a << " inválido\n";
-		return;
-	}
+    if (a < 0 || a > n_) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: vértice adjacente " << a << " inválido\n";
+        return;
+    }
 
-	vs[v].insAdj(a, dist);
+    vs_[v].insAdj(a, dist);
 
-	if (bidir)
-		vs[a].insAdj(v, dist);
+    if (bidir)
+        vs_[a].insAdj(v, dist);
 
-	return;
+    return;
 }
 
-/**
- * Imprime os vértices do grafo, seus adjacentes e suas distâncias.
- */
 void Grafo::imprime() const
 {
-	Lista *aux;
-	int v;
+    Lista* aux;
+    int v;
 
-	cout << "Número de vértices: " << n << "\n";
+    std::cout << "Número de vértices: " << n_ << "\n";
 
-	for (v = i; v < n + i; v++)
-	{
-		cout << "Adjacentes a " << v << ":";
+    for (v = i_; v < n_ + i_; v++) {
+        std::cout << "Adjacentes a " << v << ":";
 
-		if (vs[v].adj == NULL)
-			cout << " nenhum";
-		else
-		{
-			aux = vs[v].adj;
+        if (vs_[v].adj_ == nullptr)
+            std::cout << " nenhum";
+        else {
+            aux = vs_[v].adj_;
 
-			while (aux != NULL)
-			{
-				cout << " " << aux->v << "(" << aux->dist << ")";
-				aux = aux->prox;
-			}
-		}
+            while (aux != nullptr) {
+                std::cout << " " << aux->v_ << "(" << aux->dist_ << ")";
+                aux = aux->prox_;
+            }
+        }
 
-		cout << "\n";
-	}
+        std::cout << "\n";
+    }
 }
 
-/**
- * Executa o algoritmo de busca em profundidade no grafo.
- * @param v O vértice inicial a ser visitado
- */
 void Grafo::buscaProfundidade(int v)
 {
-	Pilha p;
-	bool *visitado;
-	int k;
-	Lista *aux;
+    Pilha p;
+    bool* visitado;
+    int k;
+    Lista* aux;
 
-	if (v < i || v > (n - 1) + i)
-	{
-		cerr << "[" << __func__
-			 << "()] Erro: vért. ini. " << v << " inválido\n";
-		return;
-	}
+    if (v < i_ || v > (n_ - 1) + i_) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: vért. ini. " << v << " inválido\n";
+        return;
+    }
 
-	visitado = new bool[n + 1];
+    visitado = new bool[n_ + 1];
 
-	for (k = 0; k <= n; k++)
-		visitado[k] = false;
+    for (k = 0; k <= n_; k++)
+        visitado[k] = false;
 
-	p.push(v);
+    p.push(v);
 
-	cout << "Ordem de visitação em DFS:";
+    std::cout << "Ordem de visitação em DFS:";
 
-	while (!p.vazia())
-	{
-		k = p.pop();
+    while (!p.vazia()) {
+        k = p.pop();
 
-		if (!visitado[k])
-		{
-			cout << " " << k;
-			visitado[k] = true;
+        if (!visitado[k]) {
+            std::cout << " " << k;
+            visitado[k] = true;
 
-			aux = vs[k].adj;
+            aux = vs_[k].adj_;
 
-			while (aux != NULL)
-			{
-				if (!visitado[aux->v])
-					p.push(aux->v);
+            while (aux != nullptr) {
+                if (!visitado[aux->v_])
+                    p.push(aux->v_);
 
-				aux = aux->prox;
-			}
-		}
-	}
+                aux = aux->prox_;
+            }
+        }
+    }
 
-	cout << "\n";
+    std::cout << "\n";
 
-	delete[] visitado;
+    delete[] visitado;
 
-	return;
+    return;
 }
 
-/**
- * Executa o algoritmo de busca em largura no grafo.
- * @param v O vértice inicial a ser visitado
- */
 void Grafo::buscaLargura(int v)
 {
-	Fila f;
-	bool *visitado;
-	int k;
-	Lista *aux;
+    Fila f;
+    bool* visitado;
+    int k;
+    Lista* aux;
 
-	if (v < i || v > (n - 1) + i)
-	{
-		cerr << "[" << __func__
-			 << "()] Erro: vért. ini. " << v << " inválido\n";
-		return;
-	}
+    if (v < i_ || v > (n_ - 1) + i_) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: vért. ini. " << v << " inválido\n";
+        return;
+    }
 
-	visitado = new bool[n + 1];
+    visitado = new bool[n_ + 1];
 
-	for (k = 0; k <= n; k++)
-		visitado[k] = false;
+    for (k = 0; k <= n_; k++)
+        visitado[k] = false;
 
-	f.insere(v);
+    f.insere(v);
 
-	cout << "Ordem de visitação em BFS:";
+    std::cout << "Ordem de visitação em BFS:";
 
-	while (!f.vazia())
-	{
-		k = f.retira();
+    while (!f.vazia()) {
+        k = f.retira();
 
-		if (!visitado[k])
-		{
-			cout << " " << k;
-			visitado[k] = true;
+        if (!visitado[k]) {
+            std::cout << " " << k;
+            visitado[k] = true;
 
-			aux = vs[k].adj;
+            aux = vs_[k].adj_;
 
-			while (aux != NULL)
-			{
-				if (!visitado[aux->v])
-					f.insere(aux->v);
+            while (aux != nullptr) {
+                if (!visitado[aux->v_])
+                    f.insere(aux->v_);
 
-				aux = aux->prox;
-			}
-		}
-	}
+                aux = aux->prox_;
+            }
+        }
+    }
 
-	cout << "\n";
+    std::cout << "\n";
 
-	delete[] visitado;
+    delete[] visitado;
 
-	return;
+    return;
 }
 
-/**
- * Percorre o grafo e verifica se existem componentes (um vértice ou um
- * grupo de vértices) não conectados ao resto do grafo.
- * @return Vetor com a lista de componentes (grupos)
- */
-int *Grafo::componentes()
+int* Grafo::componentes()
 {
-	Pilha p;
-	int *c, v, k, cont;
-	Lista *aux;
+    Pilha p;
+    int *c, v, k, cont;
+    Lista* aux;
 
-	c = new int[n + 1];
+    c = new int[n_ + 1];
 
-	for (v = 0; v <= n; v++)
-		c[v] = 0;
+    for (v = 0; v <= n_; v++)
+        c[v] = 0;
 
-	cont = 0;
+    cont = 0;
 
-	for (v = i; v < n + i; v++)
-	{
-		if (c[v] == 0)
-		{
-			cont++;
-			p.push(v);
+    for (v = i_; v < n_ + i_; v++) {
+        if (c[v] == 0) {
+            cont++;
+            p.push(v);
 
-			while (!p.vazia())
-			{
-				k = p.pop();
+            while (!p.vazia()) {
+                k = p.pop();
 
-				if (c[k] == 0)
-				{
-					c[k] = cont;
+                if (c[k] == 0) {
+                    c[k] = cont;
 
-					aux = vs[k].adj;
+                    aux = vs_[k].adj_;
 
-					while (aux != NULL)
-					{
-						if (c[aux->v] == 0)
-							p.push(aux->v);
+                    while (aux != nullptr) {
+                        if (c[aux->v_] == 0)
+                            p.push(aux->v_);
 
-						aux = aux->prox;
-					}
-				}
-			}
-		}
-	}
+                        aux = aux->prox_;
+                    }
+                }
+            }
+        }
+    }
 
-	return c;
+    return c;
 }
 
-/**
- * Executa o algoritmo do caminho mínimo (algoritmo de Dijkstra) no grafo.
- * @param v O vértice de partida
- * @param dist O vetor de distâncias
- * @param prev O vetor de vértices anteriores
- */
-void Grafo::caminhoMinimo(int v, int **dist, int **prev)
+void Grafo::caminhoMinimo(int v, int** dist, int** prev)
 {
-	ListaPrior lp(i, n);
-	Lista *aux;
-	int k, q, peso;
+    ListaPrior lp(i_, n_);
+    Lista* aux;
+    int k, q, peso;
 
-	if (v < i || v > (n - 1) + i)
-	{
-		cerr << "[" << __func__
-			 << "()] Erro: vért. ini. " << v << " inválido\n";
-		return;
-	}
+    if (v < i_ || v > (n_ - 1) + i_) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: vért. ini. " << v << " inválido\n";
+        return;
+    }
 
-	if (*dist == NULL)
-		*dist = new int[n + 1];
+    if (*dist == nullptr)
+        *dist = new int[n_ + 1];
 
-	if (*prev == NULL)
-		*prev = new int[n + 1];
+    if (*prev == nullptr)
+        *prev = new int[n_ + 1];
 
-	for (k = 0; k <= n; k++)
-	{
-		(*dist)[k] = INF;
-		(*prev)[k] = -1;
-	}
+    for (k = 0; k <= n_; k++) {
+        (*dist)[k] = INF;
+        (*prev)[k] = -1;
+    }
 
-	(*dist)[v] = 0;
-	lp.decresceChave(v, 0); // vértice inicial
+    (*dist)[v] = 0;
+    lp.decresceChave(v, 0); // vértice inicial
 
-	while (!lp.vazia())
-	{
-		int p = lp.extraiMin();
+    while (!lp.vazia()) {
+        int p = lp.extraiMin();
 
-		aux = vs[p].adj;
+        aux = vs_[p].adj_;
 
-		while (aux != NULL)
-		{
-			q = aux->v;
-			peso = aux->dist;
+        while (aux != nullptr) {
+            q = aux->v_;
+            peso = aux->dist_;
 
-			if ((*dist)[q] > (*dist)[p] + peso)
-			{
-				(*dist)[q] = (*dist)[p] + peso;
-				lp.decresceChave(q, (*dist)[q]);
-				(*prev)[q] = p;
-			}
+            if ((*dist)[q] > (*dist)[p] + peso) {
+                (*dist)[q] = (*dist)[p] + peso;
+                lp.decresceChave(q, (*dist)[q]);
+                (*prev)[q] = p;
+            }
 
-			aux = aux->prox;
-		}
-	}
+            aux = aux->prox_;
+        }
+    }
 
-	return;
+    return;
 }

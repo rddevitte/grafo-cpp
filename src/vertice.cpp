@@ -1,50 +1,45 @@
-#include <iostream>
 #include "../inc/vertice.h"
 #include "../inc/lista.h"
-
-using namespace std;
+#include <iostream>
 
 Vertice::Vertice()
+    : adj_(nullptr)
 {
-	adj = NULL;
 }
 
 void Vertice::insAdj(int a, int dist)
 {
-	Lista *aux;
+    Lista* aux;
 
-	if (adj == NULL)
-		adj = new Lista(a, dist);
-	else
-	{
-		aux = adj;
+    if (adj_ == nullptr)
+        adj_ = new Lista(a, dist);
+    else {
+        aux = adj_;
 
-		while (aux->prox != NULL && aux->v != a)
-			aux = aux->prox;
+        while (aux->prox_ != nullptr && aux->v_ != a)
+            aux = aux->prox_;
 
-		if (aux->v == a)
-		{
-			cerr << "[" << __func__
-				 << "()] Erro: vértice " << a << " adjacente a "
-				 << aux->v << " já existe\n";
+        if (aux->v_ == a) {
+            std::cerr << "[" << __func__
+                      << "()] Erro: vértice " << a << " adjacente a "
+                      << aux->v_ << " já existe\n";
 
-			return;
-		}
+            return;
+        }
 
-		aux->prox = new Lista(a, dist);
-	}
+        aux->prox_ = new Lista(a, dist);
+    }
 
-	return;
+    return;
 }
 
 Vertice::~Vertice()
 {
-	Lista *aux;
+    Lista* aux;
 
-	while (adj != NULL)
-	{
-		aux = adj->prox;
-		delete adj;
-		adj = aux;
-	}
+    while (adj_ != nullptr) {
+        aux = adj_->prox_;
+        delete adj_;
+        adj_ = aux;
+    }
 }

@@ -1,13 +1,11 @@
-#include <iostream>
 #include "../inc/listaprior.h"
-
-using namespace std;
+#include <iostream>
 
 NodoListaPrior::NodoListaPrior(int v, int dist)
+    : v_(v)
+    , dist_(dist)
+    , prox_(nullptr)
 {
-	this->v = v;
-	this->dist = dist;
-	prox = NULL;
 }
 
 NodoListaPrior::~NodoListaPrior()
@@ -15,214 +13,193 @@ NodoListaPrior::~NodoListaPrior()
 }
 
 ListaPrior::ListaPrior(int i, int tam)
+    : tam_(tam)
 {
-	if (i < 0 || i > 1)
-	{
-		cerr << "[" << __func__
-			 << "()] i deve ser 0 ou 1, assumindo 0\n";
-		this->i = 0;
-	}
-	else
-	{
-		this->i = i;
-	}
+    if (i < 0 || i > 1) {
+        std::cerr << "[" << __func__
+                  << "()] i deve ser 0 ou 1, assumindo 0\n";
+        i_ = 0;
+    } else {
+        i_ = i;
+    }
 
-	this->tam = tam;
+    min_ = new NodoListaPrior(i_, INF);
 
-	min = new NodoListaPrior(i, INF);
+    NodoListaPrior* aux = min_;
 
-	NodoListaPrior *aux = min;
-
-	for (int n = i + 1; n < tam + i; n++)
-	{
-		aux->prox = new NodoListaPrior(n, INF);
-		aux = aux->prox;
-	}
+    for (int n = i_ + 1; n < tam_ + i_; n++) {
+        aux->prox_ = new NodoListaPrior(n, INF);
+        aux = aux->prox_;
+    }
 }
 
 ListaPrior::ListaPrior(const ListaPrior& l)
 {
-	this->i = l.i;
-	this->tam = l.tam;
+    i_ = l.i_;
+    tam_ = l.tam_;
 
-	min = new NodoListaPrior(i, INF);
+    min_ = new NodoListaPrior(i_, INF);
 
-	NodoListaPrior *aux = min;
+    NodoListaPrior* aux = min_;
 
-	for (int n = i + 1; n < tam + i; n++)
-	{
-		aux->prox = new NodoListaPrior(n, INF);
-		aux = aux->prox;
-	}
+    for (int n = i_ + 1; n < tam_ + i_; n++) {
+        aux->prox_ = new NodoListaPrior(n, INF);
+        aux = aux->prox_;
+    }
 }
 
 ListaPrior& ListaPrior::operator=(const ListaPrior& l)
 {
-	if (&l != this)
-	{
-		delete min;
+    if (&l != this) {
+        delete min_;
 
-		this->i = l.i;
-		this->tam = l.tam;
+        i_ = l.i_;
+        tam_ = l.tam_;
 
-		min = new NodoListaPrior(i, INF);
+        min_ = new NodoListaPrior(i_, INF);
 
-		NodoListaPrior *aux = min;
+        NodoListaPrior* aux = min_;
 
-		for (int n = i + 1; n < tam + i; n++)
-		{
-			aux->prox = new NodoListaPrior(n, INF);
-			aux = aux->prox;
-		}
-	}
+        for (int n = i_ + 1; n < tam_ + i_; n++) {
+            aux->prox_ = new NodoListaPrior(n, INF);
+            aux = aux->prox_;
+        }
+    }
 
-	return *this;
+    return *this;
 }
 
 bool ListaPrior::vazia() const
 {
-	return (tam == 0);
+    return (tam_ == 0);
 }
 
 void ListaPrior::imprime() const
 {
-	NodoListaPrior *aux;
+    NodoListaPrior* aux;
 
-	if (tam == 0)
-	{
-		cerr << "[" << __func__ << "()] Erro: lista prior. vazia\n";
-		return;
-	}
+    if (tam_ == 0) {
+        std::cerr << "[" << __func__ << "()] Erro: lista prior. vazia\n";
+        return;
+    }
 
-	aux = min;
+    aux = min_;
 
-	cout << "Lista prior. de tam. " << tam << ":";
+    std::cout << "Lista prior. de tam. " << tam_ << ":";
 
-	while (aux != NULL)
-	{
-		cout << " " << aux->v << "(";
+    while (aux != nullptr) {
+        std::cout << " " << aux->v_ << "(";
 
-		if (aux->dist == INF)
-			cout << "Inf";
-		else
-			cout << aux->dist;
+        if (aux->dist_ == INF)
+            std::cout << "Inf";
+        else
+            std::cout << aux->dist_;
 
-		cout << ")";
+        std::cout << ")";
 
-		aux = aux->prox;
-	}
+        aux = aux->prox_;
+    }
 
-	cout << "\n";
+    std::cout << "\n";
 
-	return;
+    return;
 }
 
 int ListaPrior::extraiMin()
 {
-	NodoListaPrior *aux;
-	int m;
+    NodoListaPrior* aux;
+    int m;
 
-	if (min == NULL)
-	{
-		cerr << "[" << __func__ << "()] Erro: lista vazia\n";
-		return -1;
-	}
+    if (min_ == nullptr) {
+        std::cerr << "[" << __func__ << "()] Erro: lista vazia\n";
+        return -1;
+    }
 
-	m = min->v;
+    m = min_->v_;
 
-	aux = min;
-	min = min->prox;
-	delete aux;
+    aux = min_;
+    min_ = min_->prox_;
+    delete aux;
 
-	tam--;
+    tam_--;
 
-	return m;
+    return m;
 }
 
 void ListaPrior::decresceChave(int v, int dist)
 {
-	NodoListaPrior *aux, *ant;
+    NodoListaPrior *aux, *ant;
 
-	if (v < i)
-	{
-		cerr << "[" << __func__
-			 << "()] Erro: vértice " << v << " inválido\n";
-		return;
-	}
+    if (v < i_) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: vértice " << v << " inválido\n";
+        return;
+    }
 
-	/* Se chave alvo está no início da lista, apenas muda chave (dist) */
-	if (v == min->v)
-	{
-		min->dist = dist;
-	}
-	/* Senão, percorre a lista e refaz os apontamentos */
-	else
-	{
-		ant = min;
-		aux = min->prox;
+    /* Se chave alvo está no início da lista, apenas muda chave (dist) */
+    if (v == min_->v_) {
+        min_->dist_ = dist;
+    }
+    /* Senão, percorre a lista e refaz os apontamentos */
+    else {
+        ant = min_;
+        aux = min_->prox_;
 
-		while (aux != NULL && v != aux->v)
-		{
-			ant = aux;
-			aux = aux->prox;
-		}
+        while (aux != nullptr && v != aux->v_) {
+            ant = aux;
+            aux = aux->prox_;
+        }
 
-		if (aux == NULL)
-		{
-			cerr << "[" << __func__
-				 << "()] Vértice " << v << " não encontrado\n";
-			return;
-		}
+        if (aux == nullptr) {
+            std::cerr << "[" << __func__
+                      << "()] Vértice " << v << " não encontrado\n";
+            return;
+        }
 
-		aux->dist = dist;
+        aux->dist_ = dist;
 
-		/* Reapontamentos */
+        /* Reapontamentos */
 
-		/* Caso 1: nova chave do vértice alvo é menor ou igual
+        /* Caso 1: nova chave do vértice alvo é menor ou igual
 		   que a chave do vértice inicial (min) */
-		if (aux->dist <= min->dist)
-		{
-			ant->prox = aux->prox;
-			aux->prox = min;
-			min = aux;
-		}
-		/* Caso 2: nova chave é igual ou maior que a anterior e
+        if (aux->dist_ <= min_->dist_) {
+            ant->prox_ = aux->prox_;
+            aux->prox_ = min_;
+            min_ = aux;
+        }
+        /* Caso 2: nova chave é igual ou maior que a anterior e
 		   não há vértices à frente -> não necessita mover ponteiros */
-		else if (aux->dist >= ant->dist)
-		{
-			/* Prossegue (sai do if()) */
-		}
-		/* Caso 3: nova chave é igual ou maior que a anterior e menor
+        else if (aux->dist_ >= ant->dist_) {
+            /* Prossegue (sai do if()) */
+        }
+        /* Caso 3: nova chave é igual ou maior que a anterior e menor
 		   ou igual ao vértice à frente -> mesmo do caso anterior */
-		else if (aux->dist >= ant->dist && aux->dist <= aux->prox->dist)
-		{
-			/* Prossegue (sai do if()) */
-		}
-		/* Caso 4: nova chave é menor que a anterior
+        else if (aux->dist_ >= ant->dist_ && aux->dist_ <= aux->prox_->dist_) {
+            /* Prossegue (sai do if()) */
+        }
+        /* Caso 4: nova chave é menor que a anterior
 		   -> necessita movimentação */
-		else
-		{
-			ant->prox = aux->prox;
-			ant = min;
+        else {
+            ant->prox_ = aux->prox_;
+            ant = min_;
 
-			while (ant->prox != NULL && ant->prox->dist <= aux->dist)
-				ant = ant->prox;
+            while (ant->prox_ != nullptr && ant->prox_->dist_ <= aux->dist_)
+                ant = ant->prox_;
 
-			aux->prox = ant->prox;
-			ant->prox = aux;
-		}
-	}
+            aux->prox_ = ant->prox_;
+            ant->prox_ = aux;
+        }
+    }
 
-	return;
+    return;
 }
 
 ListaPrior::~ListaPrior()
 {
-	while (min != NULL)
-	{
-		NodoListaPrior *aux = min;
-		min = min->prox;
-		delete aux;
-		tam--;
-	}
+    while (min_ != nullptr) {
+        NodoListaPrior* aux = min_;
+        min_ = min_->prox_;
+        delete aux;
+        tam_--;
+    }
 }

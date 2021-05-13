@@ -1,11 +1,10 @@
-#include <iostream>
 #include "../inc/fila.h"
+#include <iostream>
 
-using namespace std;
-
-NodoFila::NodoFila(int _n) : n(_n)
+NodoFila::NodoFila(int n)
+    : n_(n)
+    , ant_(nullptr)
 {
-	ant = NULL;
 }
 
 NodoFila::~NodoFila()
@@ -13,69 +12,67 @@ NodoFila::~NodoFila()
 }
 
 Fila::Fila()
+    : tam_(0)
+    , frente_(nullptr)
+    , atras_(nullptr)
 {
-	tam = 0;
-	frente = atras = NULL;
 }
 
 Fila::~Fila()
 {
-	while (tam > 0)
-	{
-		NodoFila *aux = frente;
-		frente = frente->ant;
-		delete aux;
-		tam--;
-	}
+    while (tam_ > 0) {
+        NodoFila* aux = frente_;
+        frente_ = frente_->ant_;
+        delete aux;
+        tam_--;
+    }
 
-	atras = NULL;
+    atras_ = nullptr;
 }
 
 bool Fila::vazia() const
 {
-	return (tam == 0);
+    return (tam_ == 0);
 }
 
 void Fila::insere(int i)
 {
-	NodoFila *novo;
+    NodoFila* novo;
 
-	novo = new NodoFila(i);
+    novo = new NodoFila(i);
 
-	if (tam == 0)
-		frente = atras = novo;
-	else
-	{
-		atras->ant = novo;
-		atras = novo;
-	}
+    if (tam_ == 0)
+        frente_ = atras_ = novo;
+    else {
+        atras_->ant_ = novo;
+        atras_ = novo;
+    }
 
-	tam++;
+    tam_++;
 
-	return;
+    return;
 }
 
 int Fila::retira()
 {
-	NodoFila *aux;
-	int n;
+    NodoFila* aux;
+    int n;
 
-	if (vazia())
-	{
-		cerr << "[" << __func__ << "()] Erro: fila vazia\n";
-		return -1;
-	}
+    if (vazia()) {
+        std::cerr << "[" << __func__ << "()] Erro: fila vazia\n";
+        return -1;
+    }
 
-	n = frente->n;
+    n = frente_->n_;
 
-	aux = frente;
-	frente = frente->ant;
-	delete aux;
+    aux = frente_;
+    frente_ = frente_->ant_;
+    delete aux;
 
-	tam--;
+    tam_--;
 
-	if (tam == 0)
-		atras = NULL;
+    if (tam_ == 0)
+        atras_ = nullptr;
 
-	return n;
+    return n;
 }
