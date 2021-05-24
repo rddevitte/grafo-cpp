@@ -1,13 +1,13 @@
 #include "../inc/pilha.h"
 #include <iostream>
 
-NodoPilha::NodoPilha(int n, NodoPilha* abaixo)
+Pilha::NodoPilha::NodoPilha(int n, NodoPilha* abaixo)
     : n_(n)
     , abaixo_(abaixo)
 {
 }
 
-NodoPilha::~NodoPilha()
+Pilha::NodoPilha::~NodoPilha()
 {
 }
 

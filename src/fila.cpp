@@ -1,13 +1,13 @@
 #include "../inc/fila.h"
 #include <iostream>
 
-NodoFila::NodoFila(int n)
+Fila::NodoFila::NodoFila(int n)
     : n_(n)
     , ant_(nullptr)
 {
 }
 
-NodoFila::~NodoFila()
+Fila::NodoFila::~NodoFila()
 {
 }
 

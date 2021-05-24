@@ -1,14 +1,14 @@
 #include "../inc/listaprior.h"
 #include <iostream>
 
-NodoListaPrior::NodoListaPrior(int v, int dist)
+ListaPrior::NodoListaPrior::NodoListaPrior(int v, int dist)
     : v_(v)
     , dist_(dist)
     , prox_(nullptr)
 {
 }
 
-NodoListaPrior::~NodoListaPrior()
+ListaPrior::NodoListaPrior::~NodoListaPrior()
 {
 }
 
