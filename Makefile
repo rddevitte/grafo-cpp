@@ -1,7 +1,8 @@
 CXX=g++
 FLAGS=-Wall \
       -Wextra \
-      -pedantic
+      -Werror \
+      -Wpedantic
 RM=rm -vf
 SRC_DIR=src
 INC_DIR=inc
