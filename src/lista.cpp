@@ -1,4 +1,4 @@
-#include "../inc/lista.h"
+#include "lista.h"
 #include <iostream>
 
 Lista::Lista(int v, int dist)

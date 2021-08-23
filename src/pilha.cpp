@@ -1,4 +1,4 @@
-#include "../inc/pilha.h"
+#include "pilha.h"
 #include <iostream>
 
 Pilha::NodoPilha::NodoPilha(int n, NodoPilha* abaixo)

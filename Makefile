@@ -2,10 +2,11 @@ CXX=g++
 FLAGS=-Wall \
       -Wextra \
       -Werror \
-      -Wpedantic
+      -Wpedantic \
+      -I $(INC_DIR)
 RM=rm -vf
 SRC_DIR=src
-INC_DIR=inc
+INC_DIR=include
 OBJ_DIR=obj
 PROJ_NAME=grafo-cpp
 

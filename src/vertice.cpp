@@ -1,5 +1,5 @@
-#include "../inc/vertice.h"
-#include "../inc/lista.h"
+#include "vertice.h"
+#include "lista.h"
 #include <iostream>
 
 Vertice::Vertice()

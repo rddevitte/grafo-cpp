@@ -1,4 +1,4 @@
-#include "../inc/grafo.h"
+#include "grafo.h"
 #include <iostream>
 #include <locale>
 

@@ -1,4 +1,4 @@
-#include "../inc/listaprior.h"
+#include "listaprior.h"
 #include <iostream>
 
 ListaPrior::NodoListaPrior::NodoListaPrior(int v, int dist)

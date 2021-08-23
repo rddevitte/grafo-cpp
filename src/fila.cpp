@@ -1,4 +1,4 @@
-#include "../inc/fila.h"
+#include "fila.h"
 #include <iostream>
 
 Fila::NodoFila::NodoFila(int n)

@@ -1,8 +1,8 @@
-#include "../inc/grafo.h"
-#include "../inc/fila.h"
-#include "../inc/lista.h"
-#include "../inc/listaprior.h"
-#include "../inc/pilha.h"
+#include "grafo.h"
+#include "fila.h"
+#include "lista.h"
+#include "listaprior.h"
+#include "pilha.h"
 #include <iostream>
 
 Grafo::Grafo(int i, int n)
