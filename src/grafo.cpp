@@ -1,100 +1,46 @@
 #include "grafo.h"
-#include "fila.h"
-#include "lista.h"
-#include "listaprior.h"
-#include "pilha.h"
 #include <iostream>
+#include <limits>
+#include <queue>
+#include <stack>
+#include <utility>
 
-Grafo::Grafo(int i, int n)
-    : n_(n)
+Grafo::Grafo()
 {
-    if (i < 0 || i > 1) {
-        std::cerr << "i deve ser 0 ou 1, assumindo 0\n";
-        i_ = 0;
-    } else
-        i_ = i;
-
-    vs_ = new Vertice[n_ + 1];
-}
-
-Grafo::Grafo(const Grafo& g)
-{
-    i_ = g.i_;
-    n_ = g.n_;
-
-    vs_ = new Vertice[n_ + 1];
-
-    for (int x = 0; x < n_; x++)
-        this->vs_[x] = g.vs_[x];
-}
-
-Grafo& Grafo::operator=(const Grafo& g)
-{
-    if (&g != this) {
-        delete[] vs_;
-
-        i_ = g.i_;
-        n_ = g.n_;
-
-        vs_ = new Vertice[n_ + 1];
-
-        for (int x = 0; x < n_; x++)
-            vs_[x] = g.vs_[x];
-    }
-
-    return *this;
 }
 
 Grafo::~Grafo()
 {
-    delete[] vs_;
 }
 
 int Grafo::numVerts() const
 {
-    return n_;
+    return static_cast<int>(vs_.size());
 }
 
 void Grafo::insAdj(int v, int a, int dist, bool bidir)
 {
-    if (v < 0 || v > n_) {
-        std::cerr << "[" << __func__
-                  << "()] Erro: vértice " << v << " inválido\n";
-        return;
-    }
-
-    if (a < 0 || a > n_) {
-        std::cerr << "[" << __func__
-                  << "()] Erro: vértice adjacente " << a << " inválido\n";
-        return;
-    }
-
-    vs_[v].insAdj(a, dist);
+    vs_[v].push_back({ a, dist });
 
     if (bidir)
-        vs_[a].insAdj(v, dist);
+        vs_[a].push_back({ v, dist });
 
     return;
 }
 
 void Grafo::imprime() const
 {
-    Lista* aux;
-    int v;
+    std::cout << "Número de vértices: " << numVerts() << "\n";
 
-    std::cout << "Número de vértices: " << n_ << "\n";
+    for (const auto& v : vs_) {
+        std::cout << "Adjacentes a " << v.first << ":";
 
-    for (v = i_; v < n_ + i_; v++) {
-        std::cout << "Adjacentes a " << v << ":";
-
-        if (vs_[v].adj_ == nullptr)
+        if (v.second.empty())
             std::cout << " nenhum";
         else {
-            aux = vs_[v].adj_;
-
-            while (aux != nullptr) {
-                std::cout << " " << aux->v_ << "(" << aux->dist_ << ")";
-                aux = aux->prox_;
+            for (const auto& adj : v.second) {
+                std::cout << " " << adj.first
+                          << "(" << adj.second << ")";
             }
         }
 
@@ -104,129 +50,124 @@ void Grafo::imprime() const
 
 void Grafo::buscaProfundidade(int v)
 {
-    Pilha p;
-    bool* visitado;
-    int k;
-    Lista* aux;
+    if (vs_.empty()) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: grafo vazio (nenhum vértice)\n";
+        return;
+    }
 
-    if (v < i_ || v > (n_ - 1) + i_) {
+    if (vs_.find(v) == vs_.end()) {
         std::cerr << "[" << __func__
                   << "()] Erro: vért. ini. " << v << " inválido\n";
         return;
     }
 
-    visitado = new bool[n_ + 1];
+    std::map<int, bool> visitado;
 
-    for (k = 0; k <= n_; k++)
-        visitado[k] = false;
+    for (const auto& vert : vs_)
+        visitado[vert.first] = false;
+
+    std::stack<int> p;
 
     p.push(v);
 
     std::cout << "Ordem de visitação em DFS:";
 
-    while (!p.vazia()) {
-        k = p.pop();
+    while (!p.empty()) {
+        int k = p.top();
+        p.pop();
 
         if (!visitado[k]) {
             std::cout << " " << k;
+
             visitado[k] = true;
 
-            aux = vs_[k].adj_;
-
-            while (aux != nullptr) {
-                if (!visitado[aux->v_])
-                    p.push(aux->v_);
-
-                aux = aux->prox_;
+            for (const auto& adj : vs_[k]) {
+                if (!visitado[adj.first])
+                    p.push(adj.first);
             }
         }
     }
 
     std::cout << "\n";
-
-    delete[] visitado;
-
-    return;
 }
 
 void Grafo::buscaLargura(int v)
 {
-    Fila f;
-    bool* visitado;
-    int k;
-    Lista* aux;
+    if (vs_.empty()) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: grafo vazio (nenhum vértice)\n";
+        return;
+    }
 
-    if (v < i_ || v > (n_ - 1) + i_) {
+    if (vs_.find(v) == vs_.end()) {
         std::cerr << "[" << __func__
                   << "()] Erro: vért. ini. " << v << " inválido\n";
         return;
     }
 
-    visitado = new bool[n_ + 1];
+    std::map<int, bool> visitado;
 
-    for (k = 0; k <= n_; k++)
-        visitado[k] = false;
+    for (const auto& vert : vs_)
+        visitado[vert.first] = false;
 
-    f.insere(v);
+    std::queue<int> f;
+
+    f.push(v);
 
     std::cout << "Ordem de visitação em BFS:";
 
-    while (!f.vazia()) {
-        k = f.retira();
+    while (!f.empty()) {
+        int k = f.front();
+        f.pop();
 
         if (!visitado[k]) {
             std::cout << " " << k;
+
             visitado[k] = true;
 
-            aux = vs_[k].adj_;
-
-            while (aux != nullptr) {
-                if (!visitado[aux->v_])
-                    f.insere(aux->v_);
-
-                aux = aux->prox_;
+            for (const auto& adj : vs_[k]) {
+                if (!visitado[adj.first])
+                    f.push(adj.first);
             }
         }
     }
 
     std::cout << "\n";
-
-    delete[] visitado;
-
-    return;
 }
 
-int* Grafo::componentes()
+std::map<int, int> Grafo::componentes()
 {
-    Pilha p;
-    int *c, v, k, cont;
-    Lista* aux;
+    std::map<int, int> c;
 
-    c = new int[n_ + 1];
+    if (vs_.empty()) {
+        std::cerr << "[" << __func__
+                  << "()] Erro: grafo vazio (nenhum vértice)\n";
+        return c;
+    }
 
-    for (v = 0; v <= n_; v++)
-        c[v] = 0;
+    for (const auto& v : vs_)
+        c[v.first] = 0;
 
-    cont = 0;
+    std::stack<int> p;
 
-    for (v = i_; v < n_ + i_; v++) {
-        if (c[v] == 0) {
+    int cont = 0;
+
+    for (const auto& v : vs_) {
+        if (c[v.first] == 0) {
             cont++;
-            p.push(v);
+            p.push(v.first);
 
-            while (!p.vazia()) {
-                k = p.pop();
+            while (!p.empty()) {
+                int k = p.top();
+                p.pop();
 
                 if (c[k] == 0) {
                     c[k] = cont;
 
-                    aux = vs_[k].adj_;
-
-                    while (aux != nullptr) {
-                        if (c[aux->v_] == 0)
-                            p.push(aux->v_);
-
-                        aux = aux->prox_;
+                    for (const auto& adj : vs_[k]) {
+                        if (c[adj.first] == 0)
+                            p.push(adj.first);
                     }
                 }
             }
@@ -236,50 +177,41 @@ int* Grafo::componentes()
     return c;
 }
 
-void Grafo::caminhoMinimo(int v, int** dist, int** prev)
+std::pair<std::map<int, int>, std::map<int, int>> Grafo::caminhoMinimo(int v)
 {
-    ListaPrior lp(i_, n_);
-    Lista* aux;
-    int k, q, peso;
+    std::map<int, int> dist, prev;
 
-    if (v < i_ || v > (n_ - 1) + i_) {
+    if (vs_.size() < 2) {
         std::cerr << "[" << __func__
-                  << "()] Erro: vért. ini. " << v << " inválido\n";
-        return;
+                  << "()] Erro: quantidade de vértices insuficiente (mín. 2)\n";
+        return { dist, prev };
     }
 
-    if (*dist == nullptr)
-        *dist = new int[n_ + 1];
-
-    if (*prev == nullptr)
-        *prev = new int[n_ + 1];
-
-    for (k = 0; k <= n_; k++) {
-        (*dist)[k] = INF;
-        (*prev)[k] = -1;
+    for (const auto& vert : vs_) {
+        dist[vert.first] = std::numeric_limits<int>::max(); // "infinito"
+        prev[vert.first] = -1;
     }
 
-    (*dist)[v] = 0;
-    lp.decresceChave(v, 0); // vértice inicial
+    dist[v] = 0;
 
-    while (!lp.vazia()) {
-        int p = lp.extraiMin();
+    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, compara> pq;
 
-        aux = vs_[p].adj_;
+    pq.push({ 0, v });
 
-        while (aux != nullptr) {
-            q = aux->v_;
-            peso = aux->dist_;
+    while (!pq.empty()) {
+        int p = pq.top().second;
+        pq.pop();
 
-            if ((*dist)[q] > (*dist)[p] + peso) {
-                (*dist)[q] = (*dist)[p] + peso;
-                lp.decresceChave(q, (*dist)[q]);
-                (*prev)[q] = p;
+        for (const auto& adj : vs_[p]) {
+            int q = adj.first, peso = adj.second;
+
+            if (dist[q] > dist[p] + peso) {
+                dist[q] = dist[p] + peso;
+                pq.push({ dist[q], q });
+                prev[q] = p;
             }
-
-            aux = aux->prox_;
         }
     }
 
-    return;
+    return { dist, prev };
 }

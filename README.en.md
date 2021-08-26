@@ -1,14 +1,17 @@
 # Graph-CPP
 
-This is a small project of mine from some years ago, in C++ language, which I made while studying about graphs. Haven't touched much the source code ever since.
+This is a small project of mine from some years ago, in C++ language, which I made while studying
+about graphs.
 
-Basically, the code implements the undirected graph of the pic below, do the visiting of its nodes by breadth- and depth-first search and applies the shortest path algorithm (Dijkstra's algorithm).
+Basically, the code implements the undirected graph of the pic below, do the visiting of its nodes
+by Breadth- (BFS) and Depth-First Search (DFS) algorithms and applies the Shortest Path Algorithm
+(aka Dijkstra's Algorithm).
 
 ![Undirected graph](https://raw.githubusercontent.com/rddevitte/grafo-cpp/master/graph.svg)
 
-## Compiling
+## Build
 
-`make` or `make all`
+`make` or `make all` or `make grafo-cpp`
 
 ## Run
 

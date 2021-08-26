@@ -1,42 +1,25 @@
 #ifndef GRAFO_H
 #define GRAFO_H
 
-#include "vertice.h"
+#include <map>
+#include <utility>
+#include <vector>
 
-/* Infinito definido como a metade do maior número inteiro de 32 bits com sinal
-   (p/ algoritmo de Dijkstra) */
-#define INF 0x3FFFFFFF
+/* Compara a distância de dois vértices representados em pares.
+   O primeiro elemento de cada par é o vértice, o segundo a sua distância. */
+struct compara {
+    bool operator()(const std::pair<int, int>& lhs, const std::pair<int, int>& rhs) const
+    {
+        return lhs.second < rhs.second;
+    }
+};
 
 class Grafo {
-private:
-    /** Vértice inicial */
-    int i_;
-    /** Número de vértices */
-    int n_;
-    /** Lista de vértices */
-    Vertice* vs_;
-
 public:
     /**
      * Construtor do grafo.
-     * @param i Vértice inicial (deve ser 0 ou 1).
-     * Se i = 0, os vértices são numerados de 0 a n - 1.
-     * Se i = 1, os vértices são numerados de 1 a n.
-     * @param n Número de vértices
      */
-    Grafo(int i, int n);
-
-    /**
-     * Copy constructor.
-     * @param g O grafo a ser "copiado"
-     */
-    Grafo(const Grafo&);
-
-    /**
-     * "Sobrecarrega" o operador de igualdade (=).
-     * @param g O grafo cujos atributos são copiados para outro grafo
-     */
-    Grafo& operator=(const Grafo&);
+    Grafo();
 
     /**
      * Retorna o número de vértices do grafo.
@@ -52,7 +35,7 @@ public:
      * @param dist Distância entre 'v' e 'a'
      * @param bidir Indica se o vértice é bidirecional
      */
-    void insAdj(int v, int a, int dist, bool bidir);
+    void insAdj(int v, int a, int dist, bool bidir = true);
 
     /**
      * Imprime os vértices do grafo, seus adjacentes e suas distâncias.
@@ -76,20 +59,26 @@ public:
      * grupo de vértices) não conectados ao resto do grafo.
      * @return Vetor com a lista de componentes (grupos)
      */
-    int* componentes();
+    std::map<int, int> componentes();
 
     /**
      * Executa o algoritmo do caminho mínimo (algoritmo de Dijkstra) no grafo.
      * @param v O vértice de partida
-     * @param dist O vetor de distâncias
-     * @param prev O vetor de vértices anteriores
+     * @return Um par contendo dois vetores: um de distâncias até 'v', outro de vért. anteriores
      */
-    void caminhoMinimo(int v, int** dist, int** prev);
+    std::pair<std::map<int, int>, std::map<int, int>> caminhoMinimo(int v);
 
     /**
      * Destrutor do grafo.
      */
     ~Grafo();
+
+private:
+    /**
+     * 'Map' de vértices, contendo o vértice e sua lista ('vector')
+     * de adjacências, cada um com sua distância do vértice
+     */
+    std::map<int, std::vector<std::pair<int, int>>> vs_;
 };
 
 #endif /* GRAFO_H */

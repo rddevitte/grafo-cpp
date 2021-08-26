@@ -1,29 +1,26 @@
 #include "grafo.h"
 #include <iostream>
 #include <locale>
-
-void imprimeCaminho(int, int, int*, int*);
+#include <utility>
 
 int main(void)
 {
-    Grafo g(0, 7);
-    int x, *c;
-    int *dist, *prev;
+    Grafo g;
 
     setlocale(LC_ALL, "");
 
-    g.insAdj(0, 1, 12, true);
-    g.insAdj(0, 2, 30, true);
-    g.insAdj(1, 2, 35, true);
-    g.insAdj(1, 3, 25, true);
-    g.insAdj(1, 4, 20, true);
-    g.insAdj(2, 3, 17, true);
-    g.insAdj(2, 5, 15, true);
-    g.insAdj(3, 4, 7, true);
-    g.insAdj(3, 5, 15, true);
-    g.insAdj(4, 5, 10, true);
-    g.insAdj(4, 6, 12, true);
-    g.insAdj(5, 6, 5, true);
+    g.insAdj(0, 1, 12);
+    g.insAdj(0, 2, 30);
+    g.insAdj(1, 2, 35);
+    g.insAdj(1, 3, 25);
+    g.insAdj(1, 4, 20);
+    g.insAdj(2, 3, 17);
+    g.insAdj(2, 5, 15);
+    g.insAdj(3, 4, 7);
+    g.insAdj(3, 5, 15);
+    g.insAdj(4, 5, 10);
+    g.insAdj(4, 6, 12);
+    g.insAdj(5, 6, 5);
 
     g.imprime();
 
@@ -34,46 +31,33 @@ int main(void)
 
     std::cout << "\n";
 
-    c = g.componentes();
+    auto c = g.componentes();
 
-    std::cout << "Componentes:\n";
+    std::cout << "Componentes do grafo:\n";
 
-    for (x = 0; x < g.numVerts(); x++)
-        std::cout << x << "\t" << c[x] << "\n";
-
-    delete[] c;
+    for (const auto& comp : c) {
+        std::cout << comp.first << "\t" << comp.second << "\n";
+    }
 
     std::cout << "\n";
 
-    dist = nullptr;
-    prev = nullptr;
-    g.caminhoMinimo(0, &dist, &prev);
+    auto dist_and_prev = g.caminhoMinimo(0);
 
-    std::cout << "Caminhos:\n";
+    auto dist = dist_and_prev.first;
+    auto prev = dist_and_prev.second;
 
-    imprimeCaminho(0, 7, dist, prev);
+    std::cout << "Caminhos (partindo do vértice 0):\n";
 
-    delete[] dist;
-    delete[] prev;
+    std::cout << "V\tdist\tprev\n";
+
+    for (auto iter_dist = dist.begin(), iter_prev = prev.begin();
+         iter_dist != dist.end() && iter_prev != prev.end();
+         ++iter_dist, ++iter_prev) {
+        std::cout << iter_dist->first << "\t" << iter_dist->second << "\t"
+                  << iter_prev->second << "\n";
+    }
 
     std::cout << "\n";
 
     return 0;
-}
-
-void imprimeCaminho(int i, int n, int* dist, int* prev)
-{
-    int k;
-
-    if (dist == nullptr || prev == nullptr) {
-        std::cerr << "[" << __func__ << "()] Erro: dist ou prev é nulo\n";
-        return;
-    }
-
-    std::cout << "V\tdist\tprev\n";
-
-    for (k = i; k < n + i; k++)
-        std::cout << k << "\t" << dist[k] << "\t" << prev[k] << "\n";
-
-    return;
 }

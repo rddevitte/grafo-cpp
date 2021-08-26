@@ -1,4 +1,4 @@
+*.o
 cscope.*
-obj/
 grafo-cpp
 tags
