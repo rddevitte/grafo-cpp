@@ -34,7 +34,7 @@ public:
      * @param dist Distância entre 'v' e 'a'
      * @param bidir Indica se o vértice é bidirecional
      */
-    void insereAdjacente(V v, V a, Dist dist, bool bidir = true);
+    void insereAdjacente(const V& v, const V& a, Dist dist, bool bidir = true);
 
     /**
      * Retorna o número (quantidade) de vértices do grafo.
@@ -52,7 +52,7 @@ public:
      * Retorna a lista de vértices adjacentes a um vértice 'v'.
      * @return um vetor contendo os vértices adjacentes a 'v'
      */
-    std::vector<std::pair<V, Dist>> getAdjacentes(V v) const;
+    std::vector<std::pair<V, Dist>> getAdjacentes(const V& v) const;
 
     /**
      * Percorre o grafo e verifica se existem componentes (um vértice ou um
@@ -66,14 +66,14 @@ public:
      * @param v O vértice inicial a ser visitado
      * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
      */
-    void buscaLargura(V v, std::function<void(V&)> visita);
+    void buscaLargura(const V& v, std::function<void(V&)> visita);
 
     /**
      * Executa o algoritmo de busca em profundidade no grafo.
      * @param v O vértice inicial a ser visitado
      * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
      */
-    void buscaProfundidade(V v, std::function<void(V&)> visita);
+    void buscaProfundidade(const V& v, std::function<void(V&)> visita);
 
     /**
      * Executa o algoritmo do caminho mínimo (algoritmo de Dijkstra) no grafo.
@@ -81,7 +81,7 @@ public:
      * @return Um par contendo dois vetores: um de distâncias de 'v' até cada vértice
      *         e outro de vért. anteriores
      */
-    std::pair<std::map<V, Dist>, std::map<V, V>> caminhoMinimo(V v) const;
+    std::pair<std::map<V, Dist>, std::map<V, V>> caminhoMinimo(const V& v) const;
 
     /**
      * Compara a distância de dois vértices representados por pares,
@@ -103,7 +103,7 @@ private:
 };
 
 template <typename V, typename Dist>
-void Grafo<V, Dist>::insereAdjacente(V v, V a, Dist dist, bool bidir)
+void Grafo<V, Dist>::insereAdjacente(const V& v, const V& a, Dist dist, bool bidir)
 {
     vs_[v].push_back({ a, dist });
 
@@ -129,7 +129,7 @@ std::vector<V> Grafo<V, Dist>::getVertices() const
 }
 
 template <typename V, typename Dist>
-std::vector<std::pair<V, Dist>> Grafo<V, Dist>::getAdjacentes(V v) const
+std::vector<std::pair<V, Dist>> Grafo<V, Dist>::getAdjacentes(const V& v) const
 {
     std::vector<std::pair<V, Dist>> adj;
 
@@ -184,7 +184,7 @@ std::map<int, std::vector<V>> Grafo<V, Dist>::getComponentes() const
 }
 
 template <typename V, typename Dist>
-void Grafo<V, Dist>::buscaLargura(V v, std::function<void(V&)> visita)
+void Grafo<V, Dist>::buscaLargura(const V& v, std::function<void(V&)> visita)
 {
     if (vs_.find(v) == vs_.end())
         return;
@@ -212,7 +212,7 @@ void Grafo<V, Dist>::buscaLargura(V v, std::function<void(V&)> visita)
 }
 
 template <typename V, typename Dist>
-void Grafo<V, Dist>::buscaProfundidade(V v, std::function<void(V&)> visita)
+void Grafo<V, Dist>::buscaProfundidade(const V& v, std::function<void(V&)> visita)
 {
     if (vs_.find(v) == vs_.end()) {
         return;
@@ -241,7 +241,7 @@ void Grafo<V, Dist>::buscaProfundidade(V v, std::function<void(V&)> visita)
 }
 
 template <typename V, typename Dist>
-std::pair<std::map<V, Dist>, std::map<V, V>> Grafo<V, Dist>::caminhoMinimo(V v) const
+std::pair<std::map<V, Dist>, std::map<V, V>> Grafo<V, Dist>::caminhoMinimo(const V& v) const
 {
     std::map<V, Dist> dist;
     std::map<V, V> prev;
