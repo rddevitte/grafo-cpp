@@ -1,5 +1,5 @@
 SHELL=/usr/bin/bash
-CXX=g++
+CXX=clang++
 FLAGS=-Wall      \
       -Wextra    \
       -Werror    \
@@ -15,13 +15,8 @@ PROJ_NAME=grafo-cpp
 
 all: $(PROJ_NAME)
 
-$(PROJ_NAME): ./grafo.o \
-              ./main.o
+$(PROJ_NAME): ./main.o
 	$(CXX) $^ -o $@ $(FLAGS)
-
-./grafo.o: ./$(SRC_DIR)/grafo.cpp \
-           ./$(INC_DIR)/grafo.h
-	$(CXX) -c $< -o $@ $(FLAGS)
 
 ./main.o: ./$(SRC_DIR)/main.cpp \
           ./$(INC_DIR)/grafo.h

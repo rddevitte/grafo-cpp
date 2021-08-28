@@ -1,84 +1,283 @@
+/**
+ * @file grafo.h
+ * @brief Definição da classe Grafo e seus métodos
+ */
 #ifndef GRAFO_H
 #define GRAFO_H
 
+#include <algorithm>
+#include <functional>
+#include <limits>
 #include <map>
+#include <queue>
+#include <stack>
 #include <utility>
 #include <vector>
 
-/* Compara a distância de dois vértices representados em pares.
-   O primeiro elemento de cada par é o vértice, o segundo a sua distância. */
-struct compara {
-    bool operator()(const std::pair<int, int>& lhs, const std::pair<int, int>& rhs) const
-    {
-        return lhs.second < rhs.second;
-    }
-};
-
+template <typename V, typename Dist>
 class Grafo {
 public:
-    /**
-     * Construtor do grafo.
-     */
-    Grafo();
+    /** Construtor do grafo */
+    Grafo()
+    {
+    }
+
+    /** Destrutor do grafo */
+    ~Grafo()
+    {
+    }
 
     /**
-     * Retorna o número de vértices do grafo.
-     * @return Número de vértices do grafo
-     */
-    int numVerts() const;
-
-    /**
-     * Insere um vértice adjacente 'a' a um vértice 'v' da lista
-     * com distância 'dist'.
+     * Insere um vértice adjacente 'a' a um vértice 'v' da lista com distância 'dist'.
      * @param v O vértice
      * @param a O vértice adjacente
      * @param dist Distância entre 'v' e 'a'
      * @param bidir Indica se o vértice é bidirecional
      */
-    void insAdj(int v, int a, int dist, bool bidir = true);
+    void insereAdjacente(V v, V a, Dist dist, bool bidir = true);
 
     /**
-     * Imprime os vértices do grafo, seus adjacentes e suas distâncias.
+     * Retorna a lista de vértices do grafo
+     * @return um vetor contendo os vértices do grafo
      */
-    void imprime() const;
+    std::vector<V> getVertices() const;
+
+    /**
+     * Retorna o número (quantidade) de vértices do grafo.
+     * @return a quantidade de vértices do grafo
+     */
+    int numVertices() const;
+
+    /**
+     * Retorna a lista de vértices adjacentes a um vértice 'v'.
+     * @return um vetor contendo os vértices adjacentes a 'v'
+     */
+    std::vector<std::pair<V, Dist>> getAdjacentes(V v) const;
 
     /**
      * Executa o algoritmo de busca em profundidade no grafo.
      * @param v O vértice inicial a ser visitado
+     * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
      */
-    void buscaProfundidade(int v);
+    void buscaProfundidade(V v, std::function<void(V)> visita);
 
     /**
      * Executa o algoritmo de busca em largura no grafo.
      * @param v O vértice inicial a ser visitado
+     * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
      */
-    void buscaLargura(int v);
+    void buscaLargura(V v, std::function<void(V)> visita);
 
     /**
      * Percorre o grafo e verifica se existem componentes (um vértice ou um
      * grupo de vértices) não conectados ao resto do grafo.
-     * @return Vetor com a lista de componentes (grupos)
+     * @return Um 'map' com os grupos de vértices e a lista de vértices que pertencem a cada grupo
      */
-    std::map<int, int> componentes();
+    std::map<int, std::vector<V>> getComponentes() const;
 
     /**
      * Executa o algoritmo do caminho mínimo (algoritmo de Dijkstra) no grafo.
      * @param v O vértice de partida
-     * @return Um par contendo dois vetores: um de distâncias até 'v', outro de vért. anteriores
+     * @return Um par contendo dois vetores: um de distâncias de 'v' até cada vértice
+     *         e outro de vért. anteriores
      */
-    std::pair<std::map<int, int>, std::map<int, int>> caminhoMinimo(int v);
+    std::pair<std::map<V, Dist>, std::map<V, V>> caminhoMinimo(V v);
 
     /**
-     * Destrutor do grafo.
+     * Compara a distância de dois vértices representados por pares,
+     * onde o primeiro elemento de cada par é o vértice, e o segundo a sua distância.
      */
-    ~Grafo();
+    struct comparador {
+        bool operator()(const std::pair<V, Dist>& lhs, const std::pair<V, Dist>& rhs) const
+        {
+            return lhs.second < rhs.second;
+        }
+    };
 
 private:
     /**
      * 'Map' de vértices, contendo o vértice e sua lista ('vector')
      * de adjacências, cada um com sua distância do vértice
      */
-    std::map<int, std::vector<std::pair<int, int>>> vs_;
+    std::map<V, std::vector<std::pair<V, Dist>>> vs_;
 };
+
+template <typename V, typename Dist>
+void Grafo<V, Dist>::insereAdjacente(V v, V a, Dist dist, bool bidir)
+{
+    vs_[v].push_back({ a, dist });
+
+    if (bidir)
+        vs_[a].push_back({ v, dist });
+}
+
+template <typename V, typename Dist>
+std::vector<V> Grafo<V, Dist>::getVertices() const
+{
+    std::vector<V> verts;
+
+    std::transform(vs_.begin(), vs_.end(), std::back_inserter(verts),
+        [](std::pair<V, std::vector<std::pair<V, Dist>>> vs) { return vs.first; });
+
+    return verts;
+}
+
+template <typename V, typename Dist>
+int Grafo<V, Dist>::numVertices() const
+{
+    return static_cast<int>(vs_.size());
+}
+
+template <typename V, typename Dist>
+std::vector<std::pair<V, Dist>> Grafo<V, Dist>::getAdjacentes(V v) const
+{
+    std::vector<std::pair<V, Dist>> adj;
+
+    if (vs_.find(v) != vs_.end())
+        adj = vs_.at(v);
+
+    return adj;
+}
+
+template <typename V, typename Dist>
+void Grafo<V, Dist>::buscaProfundidade(V v, std::function<void(V)> visita)
+{
+    if (vs_.find(v) == vs_.end()) {
+        return;
+    }
+
+    std::map<V, bool> visitado;
+
+    std::stack<V> p;
+
+    p.push(v);
+
+    while (!p.empty()) {
+        V k = p.top();
+        p.pop();
+
+        if (visitado.find(k) == visitado.end()) {
+            visita(k);
+
+            visitado[k] = true;
+
+            for (const auto& adj : vs_[k])
+                if (visitado.find(adj.first) == visitado.end())
+                    p.push(adj.first);
+        }
+    }
+}
+
+template <typename V, typename Dist>
+void Grafo<V, Dist>::buscaLargura(V v, std::function<void(V)> visita)
+{
+    if (vs_.find(v) == vs_.end())
+        return;
+
+    std::map<V, bool> visitado;
+
+    std::queue<V> f;
+
+    f.push(v);
+
+    while (!f.empty()) {
+        V k = f.front();
+        f.pop();
+
+        if (visitado.find(k) == visitado.end()) {
+            visita(k);
+
+            visitado[k] = true;
+
+            for (const auto& adj : vs_[k])
+                if (visitado.find(adj.first) == visitado.end())
+                    f.push(adj.first);
+        }
+    }
+}
+
+template <typename V, typename Dist>
+std::map<int, std::vector<V>> Grafo<V, Dist>::getComponentes() const
+{
+    std::map<int, std::vector<V>> comp;
+
+    if (vs_.empty()) {
+        return comp;
+    }
+
+    std::map<V, int> c;
+
+    for (const auto& v : vs_)
+        c[v.first] = 0;
+
+    std::stack<V> p;
+
+    int cont = 0;
+
+    for (const auto& v : vs_) {
+        if (c[v.first] == 0) {
+            cont++;
+            p.push(v.first);
+
+            while (!p.empty()) {
+                V k = p.top();
+                p.pop();
+
+                if (c[k] == 0) {
+                    c[k] = cont;
+
+                    for (const auto& adj : vs_.at(k))
+                        if (c[adj.first] == 0)
+                            p.push(adj.first);
+                }
+            }
+        }
+    }
+
+    for (const auto& v : c)
+        comp[v.second].push_back(v.first);
+
+    return comp;
+}
+
+template <typename V, typename Dist>
+std::pair<std::map<V, Dist>, std::map<V, V>> Grafo<V, Dist>::caminhoMinimo(V v)
+{
+    std::map<V, Dist> dist;
+    std::map<V, V> prev;
+
+    if (vs_.size() < 2) {
+        return { dist, prev };
+    }
+
+    for (const auto& vert : vs_) {
+        dist[vert.first] = std::numeric_limits<Dist>::max(); // "infinito"
+        prev[vert.first] = vert.first;
+    }
+
+    dist[v] = static_cast<Dist>(0);
+
+    std::priority_queue<std::pair<V, Dist>, std::vector<std::pair<V, Dist>>, Grafo::comparador> pq;
+
+    pq.push({ v, static_cast<Dist>(0) });
+
+    while (!pq.empty()) {
+        V p = pq.top().first;
+        pq.pop();
+
+        for (const auto& adj : vs_[p]) {
+            V q = adj.first;
+            Dist peso = adj.second;
+
+            if (dist[q] > dist[p] + peso) {
+                dist[q] = dist[p] + peso;
+                pq.push({ q, dist[q] });
+                prev[q] = p;
+            }
+        }
+    }
+
+    return { dist, prev };
+}
 
 #endif /* GRAFO_H */
