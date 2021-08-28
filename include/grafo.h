@@ -59,14 +59,14 @@ public:
      * @param v O vértice inicial a ser visitado
      * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
      */
-    void buscaProfundidade(V v, std::function<void(V)> visita);
+    void buscaProfundidade(V v, std::function<void(V&)> visita);
 
     /**
      * Executa o algoritmo de busca em largura no grafo.
      * @param v O vértice inicial a ser visitado
      * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
      */
-    void buscaLargura(V v, std::function<void(V)> visita);
+    void buscaLargura(V v, std::function<void(V&)> visita);
 
     /**
      * Percorre o grafo e verifica se existem componentes (um vértice ou um
@@ -140,7 +140,7 @@ std::vector<std::pair<V, Dist>> Grafo<V, Dist>::getAdjacentes(V v) const
 }
 
 template <typename V, typename Dist>
-void Grafo<V, Dist>::buscaProfundidade(V v, std::function<void(V)> visita)
+void Grafo<V, Dist>::buscaProfundidade(V v, std::function<void(V&)> visita)
 {
     if (vs_.find(v) == vs_.end()) {
         return;
@@ -161,7 +161,7 @@ void Grafo<V, Dist>::buscaProfundidade(V v, std::function<void(V)> visita)
 
             visitado[k] = true;
 
-            for (const auto& adj : vs_[k])
+            for (const auto& adj : vs_.at(k))
                 if (visitado.find(adj.first) == visitado.end())
                     p.push(adj.first);
         }
@@ -169,7 +169,7 @@ void Grafo<V, Dist>::buscaProfundidade(V v, std::function<void(V)> visita)
 }
 
 template <typename V, typename Dist>
-void Grafo<V, Dist>::buscaLargura(V v, std::function<void(V)> visita)
+void Grafo<V, Dist>::buscaLargura(V v, std::function<void(V&)> visita)
 {
     if (vs_.find(v) == vs_.end())
         return;
@@ -189,7 +189,7 @@ void Grafo<V, Dist>::buscaLargura(V v, std::function<void(V)> visita)
 
             visitado[k] = true;
 
-            for (const auto& adj : vs_[k])
+            for (const auto& adj : vs_.at(k))
                 if (visitado.find(adj.first) == visitado.end())
                     f.push(adj.first);
         }

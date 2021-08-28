@@ -12,7 +12,7 @@ template <typename V, typename Dist>
 void imprimeGrafo(const Grafo<V, Dist>& g);
 
 template <typename V>
-void imprimeVertice(V v);
+void imprimeVertice(V& v);
 
 template <typename V>
 void imprimeComponentes(std::map<int, std::vector<V>> comp);
@@ -85,7 +85,7 @@ void imprimeGrafo(const Grafo<V, Dist>& g)
 }
 
 template <typename V>
-void imprimeVertice(V v)
+void imprimeVertice(V& v)
 {
     std::cout << " " << v;
 }
