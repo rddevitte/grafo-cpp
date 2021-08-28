@@ -37,36 +37,22 @@ public:
     void insereAdjacente(V v, V a, Dist dist, bool bidir = true);
 
     /**
-     * Retorna a lista de vértices do grafo
-     * @return um vetor contendo os vértices do grafo
-     */
-    std::vector<V> getVertices() const;
-
-    /**
      * Retorna o número (quantidade) de vértices do grafo.
      * @return a quantidade de vértices do grafo
      */
     int numVertices() const;
 
     /**
+     * Retorna a lista de vértices do grafo
+     * @return um vetor contendo os vértices do grafo
+     */
+    std::vector<V> getVertices() const;
+
+    /**
      * Retorna a lista de vértices adjacentes a um vértice 'v'.
      * @return um vetor contendo os vértices adjacentes a 'v'
      */
     std::vector<std::pair<V, Dist>> getAdjacentes(V v) const;
-
-    /**
-     * Executa o algoritmo de busca em profundidade no grafo.
-     * @param v O vértice inicial a ser visitado
-     * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
-     */
-    void buscaProfundidade(V v, std::function<void(V&)> visita);
-
-    /**
-     * Executa o algoritmo de busca em largura no grafo.
-     * @param v O vértice inicial a ser visitado
-     * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
-     */
-    void buscaLargura(V v, std::function<void(V&)> visita);
 
     /**
      * Percorre o grafo e verifica se existem componentes (um vértice ou um
@@ -76,12 +62,26 @@ public:
     std::map<int, std::vector<V>> getComponentes() const;
 
     /**
+     * Executa o algoritmo de busca em largura no grafo.
+     * @param v O vértice inicial a ser visitado
+     * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
+     */
+    void buscaLargura(V v, std::function<void(V&)> visita);
+
+    /**
+     * Executa o algoritmo de busca em profundidade no grafo.
+     * @param v O vértice inicial a ser visitado
+     * @param visita Uma 'função objeto' que 'visita' cada nodo do grafo
+     */
+    void buscaProfundidade(V v, std::function<void(V&)> visita);
+
+    /**
      * Executa o algoritmo do caminho mínimo (algoritmo de Dijkstra) no grafo.
      * @param v O vértice de partida
      * @return Um par contendo dois vetores: um de distâncias de 'v' até cada vértice
      *         e outro de vért. anteriores
      */
-    std::pair<std::map<V, Dist>, std::map<V, V>> caminhoMinimo(V v);
+    std::pair<std::map<V, Dist>, std::map<V, V>> caminhoMinimo(V v) const;
 
     /**
      * Compara a distância de dois vértices representados por pares,
@@ -112,6 +112,12 @@ void Grafo<V, Dist>::insereAdjacente(V v, V a, Dist dist, bool bidir)
 }
 
 template <typename V, typename Dist>
+int Grafo<V, Dist>::numVertices() const
+{
+    return static_cast<int>(vs_.size());
+}
+
+template <typename V, typename Dist>
 std::vector<V> Grafo<V, Dist>::getVertices() const
 {
     std::vector<V> verts;
@@ -123,12 +129,6 @@ std::vector<V> Grafo<V, Dist>::getVertices() const
 }
 
 template <typename V, typename Dist>
-int Grafo<V, Dist>::numVertices() const
-{
-    return static_cast<int>(vs_.size());
-}
-
-template <typename V, typename Dist>
 std::vector<std::pair<V, Dist>> Grafo<V, Dist>::getAdjacentes(V v) const
 {
     std::vector<std::pair<V, Dist>> adj;
@@ -137,6 +137,78 @@ std::vector<std::pair<V, Dist>> Grafo<V, Dist>::getAdjacentes(V v) const
         adj = vs_.at(v);
 
     return adj;
+}
+
+template <typename V, typename Dist>
+std::map<int, std::vector<V>> Grafo<V, Dist>::getComponentes() const
+{
+    std::map<int, std::vector<V>> comp;
+
+    if (vs_.empty()) {
+        return comp;
+    }
+
+    std::map<V, int> c;
+
+    for (const auto& v : vs_)
+        c[v.first] = 0;
+
+    std::stack<V> p;
+
+    int cont = 0;
+
+    for (const auto& v : vs_) {
+        if (c.at(v.first) == 0) {
+            cont++;
+            p.push(v.first);
+
+            while (!p.empty()) {
+                V k = p.top();
+                p.pop();
+
+                if (c.at(k) == 0) {
+                    c[k] = cont;
+
+                    for (const auto& adj : vs_.at(k))
+                        if (c.at(adj.first) == 0)
+                            p.push(adj.first);
+                }
+            }
+        }
+    }
+
+    for (const auto& v : c)
+        comp[v.second].push_back(v.first);
+
+    return comp;
+}
+
+template <typename V, typename Dist>
+void Grafo<V, Dist>::buscaLargura(V v, std::function<void(V&)> visita)
+{
+    if (vs_.find(v) == vs_.end())
+        return;
+
+    std::map<V, bool> visitado;
+
+    std::queue<V> f;
+
+    f.push(v);
+
+    while (!f.empty()) {
+        V k = f.front();
+        f.pop();
+
+        if (visitado.find(k) == visitado.end()) {
+            visita(k);
+
+            visitado[k] = true;
+
+            for (const auto& adj : vs_.at(k))
+                if (visitado.find(adj.first) == visitado.end())
+                    f.push(adj.first);
+        }
+    }
 }
 
 template <typename V, typename Dist>
@@ -169,79 +241,7 @@ void Grafo<V, Dist>::buscaProfundidade(V v, std::function<void(V&)> visita)
 }
 
 template <typename V, typename Dist>
-void Grafo<V, Dist>::buscaLargura(V v, std::function<void(V&)> visita)
-{
-    if (vs_.find(v) == vs_.end())
-        return;
-
-    std::map<V, bool> visitado;
-
-    std::queue<V> f;
-
-    f.push(v);
-
-    while (!f.empty()) {
-        V k = f.front();
-        f.pop();
-
-        if (visitado.find(k) == visitado.end()) {
-            visita(k);
-
-            visitado[k] = true;
-
-            for (const auto& adj : vs_.at(k))
-                if (visitado.find(adj.first) == visitado.end())
-                    f.push(adj.first);
-        }
-    }
-}
-
-template <typename V, typename Dist>
-std::map<int, std::vector<V>> Grafo<V, Dist>::getComponentes() const
-{
-    std::map<int, std::vector<V>> comp;
-
-    if (vs_.empty()) {
-        return comp;
-    }
-
-    std::map<V, int> c;
-
-    for (const auto& v : vs_)
-        c[v.first] = 0;
-
-    std::stack<V> p;
-
-    int cont = 0;
-
-    for (const auto& v : vs_) {
-        if (c[v.first] == 0) {
-            cont++;
-            p.push(v.first);
-
-            while (!p.empty()) {
-                V k = p.top();
-                p.pop();
-
-                if (c[k] == 0) {
-                    c[k] = cont;
-
-                    for (const auto& adj : vs_.at(k))
-                        if (c[adj.first] == 0)
-                            p.push(adj.first);
-                }
-            }
-        }
-    }
-
-    for (const auto& v : c)
-        comp[v.second].push_back(v.first);
-
-    return comp;
-}
-
-template <typename V, typename Dist>
-std::pair<std::map<V, Dist>, std::map<V, V>> Grafo<V, Dist>::caminhoMinimo(V v)
+std::pair<std::map<V, Dist>, std::map<V, V>> Grafo<V, Dist>::caminhoMinimo(V v) const
 {
     std::map<V, Dist> dist;
     std::map<V, V> prev;
@@ -265,13 +265,13 @@ std::pair<std::map<V, Dist>, std::map<V, V>> Grafo<V, Dist>::caminhoMinimo(V v)
         V p = pq.top().first;
         pq.pop();
 
-        for (const auto& adj : vs_[p]) {
+        for (const auto& adj : vs_.at(p)) {
             V q = adj.first;
             Dist peso = adj.second;
 
-            if (dist[q] > dist[p] + peso) {
-                dist[q] = dist[p] + peso;
-                pq.push({ q, dist[q] });
+            if (dist.at(q) > dist.at(p) + peso) {
+                dist[q] = dist.at(p) + peso;
+                pq.push({ q, dist.at(q) });
                 prev[q] = p;
             }
         }

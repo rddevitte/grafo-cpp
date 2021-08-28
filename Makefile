@@ -4,6 +4,7 @@ FLAGS=-Wall      \
       -Wextra    \
       -Werror    \
       -Wpedantic \
+      -g         \
       -std=c++11 \
       -I $(INC_DIR)
 RM=rm -vf
