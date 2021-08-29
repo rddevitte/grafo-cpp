@@ -17,10 +17,10 @@ template <typename V>
 void imprimeVertice(V &v);
 
 template <typename V>
-void imprimeComponentes(std::map<int, std::vector<V>> comp);
+void imprimeComponentes(const std::map<int, std::vector<V>> &comp);
 
 template <typename V, typename Dist>
-void imprimeCaminhosEDistancias(std::pair<std::map<V, Dist>, std::map<V, V>> dist_e_prev);
+void imprimeCaminhosEDistancias(const std::pair<std::map<V, Dist>, std::map<V, V>> &dist_e_prev);
 
 int main()
 {
@@ -91,7 +91,7 @@ void imprimeVertice(V &v)
 }
 
 template <typename V>
-void imprimeComponentes(std::map<int, std::vector<V>> comp)
+void imprimeComponentes(const std::map<int, std::vector<V>> &comp)
 {
     if (comp.empty()) {
         std::cout << "(nenhum)\n";
@@ -111,7 +111,7 @@ void imprimeComponentes(std::map<int, std::vector<V>> comp)
 }
 
 template <typename V, typename Dist>
-void imprimeCaminhosEDistancias(std::pair<std::map<V, Dist>, std::map<V, V>> dist_e_prev)
+void imprimeCaminhosEDistancias(const std::pair<std::map<V, Dist>, std::map<V, V>> &dist_e_prev)
 {
     auto dist = dist_e_prev.first;
     auto prev = dist_e_prev.second;
