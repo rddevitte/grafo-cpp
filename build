@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+mkdir -p _build
+cmake -S . -B _build -Werror=dev
+make -C _build

@@ -11,8 +11,12 @@ its vertices and applies the Shortest Path Algorithm (aka &ldquo;Dijkstra's Algo
 
 ## Build
 
-`make` or `make all` or `make grafo-cpp`
+Assuming you already have CMake 3.16 or later installed, run the `./build` script.
 
-## Run
+## Run executable
 
-`./grafo-cpp`
+After building, run `./_build/grafo-cpp`.
+
+## Clean
+
+Just do `rm -r _build`.

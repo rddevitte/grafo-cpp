@@ -10,8 +10,13 @@ e aplica o algoritmo do Caminho Mínimo (ou simplesmente &ldquo;algoritmo de Dij
 
 ## Compilação
 
-`make` ou `make all` ou `make grafo-cpp`
+Assumindo que você já tenha instalado o CMake versão 3.16 ou a mais recente, execute o *script*
+`./build`.
 
 ## Executar
 
-`./grafo-cpp`
+Após compilado, execute `./_build/grafo-cpp`.
+
+## Limpeza
+
+Apenas execute `rm -r _build`.

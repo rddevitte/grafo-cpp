@@ -1,4 +1,1 @@
-*.o
-cscope.*
-grafo-cpp
-tags
+_build
