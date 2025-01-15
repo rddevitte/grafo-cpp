@@ -1,4 +1,10 @@
 _build
+.clang-format
+docker-build-and-run
+Dockerfile
+.dockerignore
+.git
+.gitignore
 graph.svg
 LICENSE
 README*
