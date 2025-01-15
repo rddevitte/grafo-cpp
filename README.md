@@ -20,3 +20,8 @@ Após compilado, execute `./_build/grafo-cpp`.
 ## Limpeza
 
 Apenas execute `rm -r _build`.
+
+## Compilação e execução (Docker)
+
+Assumindo que tenha instalado a *engine* do Docker localmente, basta executar o *script*
+`./docker-build-and-run`.

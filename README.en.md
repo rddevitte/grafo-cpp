@@ -20,3 +20,7 @@ After building, run `./_build/grafo-cpp`.
 ## Clean
 
 Just do `rm -r _build`.
+
+## Build and run (Docker)
+
+Assuming the Docker engine has been already installed, just run the `./docker-build-and-run` script.
